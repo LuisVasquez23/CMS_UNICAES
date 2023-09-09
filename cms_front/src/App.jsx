@@ -1,13 +1,8 @@
-import Navbar from "./components/Navbar";
-
+import Login from "./pages/Login/Login";
 const App = () => {
   return (
     <>
-      <Navbar />
-      <div className="container">
-        <h1>Welcome to CMS</h1>
-        {/* Render your CMS content here */}
-      </div>
+      <Login />
     </>
   );
 };
