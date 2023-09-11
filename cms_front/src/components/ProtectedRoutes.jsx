@@ -3,9 +3,6 @@ import { useAuth } from "../auth/AuthProvider";
 
 const ProtectedRoutes = () => {
   const auth = useAuth();
-
-  
-
   return auth.isAuthenticated ? <Outlet /> : <Navigate to="/" />;
 };
 
