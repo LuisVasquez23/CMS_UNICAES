@@ -58,9 +58,20 @@ class AuthController extends Controller
             $token = $user->createToken('token')->plainTextToken;
             $cookie = cookie('cookie_token', $token, 60 * 24);
 
+            $userId = $user->id;
+            $userName = $user->name;
+
+            $pageCount = $user->pages()->count();
+           
+
             return response()->json([
                 'token' => $token,
+                'userId' => $userId,
+                'userName' => $userName,
+                'pageCount' => $pageCount,
+                
             ], Response::HTTP_OK);
+
         } else {
             return response()->json([
                 'message' => 'Credenciales inválidas'
