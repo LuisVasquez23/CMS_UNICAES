@@ -21,4 +21,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password'
     ];
+
+
+    public function pages(){
+        return $this->hasMany(Page::class);
+    }
 }

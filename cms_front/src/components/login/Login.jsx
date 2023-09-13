@@ -5,9 +5,11 @@ import { useAuth } from "../../auth/AuthProvider";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const auth = useAuth(); // Obtén la función login del contexto
 
   const handleSubmit = async (e) => {
@@ -34,6 +36,11 @@ const Login = () => {
       if (response.ok) {
         // Utiliza js-cookie para guardar datos en las cookies
         Cookies.set("token", responseData.token, { expires: 7 }); // Ejemplo: guarda un token con una duración de 7 días
+        Cookies.set("userId", responseData.userId, { expires: 7 }); // Guarda el userId
+        Cookies.set("userName", responseData.userName, { expires: 7 }); // Guarda el userName
+        Cookies.set("pageCount", responseData.pageCount, { expires: 7 }); // Agrega el conteo de páginas a las cookies
+
+        
 
         auth.login();
       } else {
@@ -45,7 +52,7 @@ const Login = () => {
     }
   };
 
-  if (auth.isAuthenticated) {
+  if (auth.isAuthenticated) {    
     return <Navigate to="/dashboard" />;
   }
 
