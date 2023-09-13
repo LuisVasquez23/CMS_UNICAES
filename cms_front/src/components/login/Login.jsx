@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthProvider";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -83,6 +83,11 @@ const Login = () => {
               className="btn-primary btn w-100"
               value={"Iniciar sesión"}
             />
+          </div>
+          <div className="form-group">
+            <Link to="registro" className="btn btn-link w-100">
+              Crear una cuenta
+            </Link>
           </div>
         </form>
 
