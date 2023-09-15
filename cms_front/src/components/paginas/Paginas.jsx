@@ -2,19 +2,33 @@ import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { Row, Col } from 'react-bootstrap';
 import 'font-awesome/css/font-awesome.min.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
+import Swal from 'sweetalert2';
 
+const Pagina = ({ page, handleDeletePage }) => {
 
-const Pagina = ({ page }) => {
+  const navigate = useNavigate();
+
   return (
-    <Col md={6}>
+    <Col md={4}>
       <ul className="mt-5">
         <li key={page.id}>
-          <h3 className="fw-semibold">Titulo: {page.title}</h3>
-          <p className="fw-normal">url: {page.url}</p>
+          <h3 className="fw-semibold fs-3">Titulo: {page.title}</h3>
+          <p className="fw-normal fs-6 text-info-emphasis">url: {page.url}</p>
           <div className="btn-group" role="group">
-            <button type="button" className="btn btn-primary">Editar</button>
-            <button type="button" className="btn btn-danger">Eliminar</button>
+            <button type="button" className="btn btn-primary"
+            onClick={() => navigate(`/dashboard/paginas/edit/${page.id}`)}
+            >Editar
+            </button>
+            
+            <button 
+            type="button" 
+            className="btn btn-danger"
+            onClick={() => handleDeletePage(page.id)}
+
+            >Eliminar
+            </button>
+
           </div>
         </li>
       </ul>
@@ -50,6 +64,52 @@ const Paginas = () => {
     fetchPages();
   }, [userId]);
 
+
+  const handleDeletePage = async (pageId) => {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¡No podrás revertir esto!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminarlo'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch(`http://127.0.0.1:8000/api/pages/${pageId}`, {
+            method: "DELETE",
+          });
+          if (response.ok) {
+            Swal.fire({
+              icon: "success",
+              title: "¡Página eliminada!",
+              text: "Se ha eliminado la página correctamente",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+  
+            setTimeout(() => {
+              window.location.href = "/dashboard/paginas";
+            }, 2000);
+          } else {
+            console.error("Error al eliminar la página");
+            Swal.fire({
+              icon: "error",
+              title: "Error al eliminar la página",
+              text: "Ocurrió un error al eliminar la página.",
+            });
+          }
+        } catch (error) {
+          console.error("Error al realizar la solicitud:", error);
+        }
+      }
+    });
+  };
+  
+  
+  
+
   return (
     <>
     <div className="text-center">
@@ -76,7 +136,7 @@ const Paginas = () => {
                     <Row>
                     {pages.map((page, index) => (
                       <React.Fragment key={page.id}>
-                        <Pagina page={page} />
+                        <Pagina page={page} handleDeletePage={handleDeletePage} />
                         {index % 3 === 2 && <div className="w-100"></div>}
                       </React.Fragment>
                     ))}

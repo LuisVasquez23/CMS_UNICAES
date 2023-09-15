@@ -33,10 +33,6 @@ class PageController extends Controller
             return new JsonResponse(['errors' => $validator->errors()], 422);
         }
 
-        // $user = Auth::user();
-
-        // $userId = $user->id;
-
         // Valida los datos del formulario
         $request->validate([
             'title' => 'required|string',
@@ -55,6 +51,19 @@ class PageController extends Controller
         $page->save();
 
         return response()->json(['message' => 'Página creada con éxito'], 201);
+    }
+
+
+    public function show($id)
+    {
+        try {
+            $page = Page::findOrFail($id);
+
+            return response()->json($page);
+        } catch (\Exception $e) {
+            // Maneja cualquier error que pueda ocurrir, como página no encontrada
+            return response()->json(['message' => 'Página no encontrada'], 404);
+        }
     }
 
 
@@ -77,6 +86,70 @@ class PageController extends Controller
     
         return response()->json($pages, 200);
     }
+
+
+    public function getPageCount($user_id)
+    {
+
+    $user = User::find($user_id);
+
+    if (!$user) {
+        // Si el usuario no existe, devuelve una respuesta de error
+        return response()->json(['message' => 'Usuario no encontrado'], 404);
+    }
+
+    $pageCount = Page::where('user_id', $user_id)->count();
+    
+    return response()->json(['pageCount' => $pageCount]);
+    }
+    
+    
+    
+    public function deletePage($id)
+    {
+    $page = Page::find($id);
+
+    if (!$page) {
+        return response()->json(['message' => 'Página no encontrada'], 404);
+    }
+
+    // Elimina la página
+    $page->delete();
+
+    return response()->json(['message' => 'Página eliminada con éxito']);
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        // Valida los datos del formulario
+        $request->validate([
+            'title' => 'required|string',
+            'url' => 'required|url',
+            'HTMLContent' => 'required|string',
+        ]);
+
+        try {
+            // Encuentra la página por su ID
+            $page = Page::findOrFail($id);
+
+            // Actualiza los campos de la página con los datos del formulario
+            $page->title = $request->input('title');
+            $page->url = $request->input('url');
+            $page->HTMLContent = $request->input('HTMLContent');
+
+            // Guarda los cambios en la base de datos
+            $page->save();
+
+            // Devuelve una respuesta exitosa
+            return response()->json(['message' => 'Página actualizada correctamente'], 200);
+        } catch (\Exception $e) {
+            // Manejo de errores en caso de que algo salga mal
+            return response()->json(['error' => 'Error al actualizar la página'], 500);
+        }
+    }
+
+
 
 
 }

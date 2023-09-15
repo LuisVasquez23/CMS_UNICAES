@@ -61,14 +61,14 @@ class AuthController extends Controller
             $userId = $user->id;
             $userName = $user->name;
 
-            $pageCount = $user->pages()->count();
+
            
 
             return response()->json([
                 'token' => $token,
                 'userId' => $userId,
                 'userName' => $userName,
-                'pageCount' => $pageCount,
+                
                 
             ], Response::HTTP_OK);
 

@@ -14,9 +14,17 @@ Route::post('/oauth/token/refresh', [AccessTokenController::class, 'refresh'])->
 
 
 //Rutas para manejar el ingreso de paginas
+Route::get('pages/{user_id}', [PageController::class, 'getPagesByUserId']);
+Route::get('/page-count/{user_id}', [PageController::class, 'getPageCount']);
+Route::get('/pages/show/{id}', [PageController::class, 'show']);
 
 Route::post('store', [PageController::class, 'store']);
-Route::get('pages/{user_id}', [PageController::class, 'getPagesByUserId']);
+
+
+Route::put('/pages/update/{id}', [PageController::class, 'update']);
+
+
+Route::delete('/pages/{id}', [PageController::class, 'deletePage']);
 
 
 //Ruta para acceder a las etiquetas

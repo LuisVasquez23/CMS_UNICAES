@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./paginas.css";
+import Cookies from "js-cookie";
+import Swal from 'sweetalert2';
+
 
 const Paginascreate = () => {
+
+  const [successMessage, setSuccessMessage] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(true);
 
   const toggleMenu = () => {
@@ -14,6 +19,12 @@ const Paginascreate = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [previewHtml, setPreviewHtml] = useState("");
   const [contenidoHtml, setContenidoHtml] = useState("");
+
+  const [etiquetasArrastradas, setEtiquetasArrastradas] = useState([]);
+
+
+  //--------------------------------- Api para etiquetas------------------------------
+
 
   useEffect(() => {
     // Realizamos una solicitud a la API
@@ -43,6 +54,7 @@ const Paginascreate = () => {
     setPreviewHtml(bootstrapHtml);
   }, [contenidoHtml]);
 
+
   const handleDragStart = (e, estructuraHtml) => {
     e.dataTransfer.setData("text/plain", estructuraHtml);
     setEtiquetaArrastrada(estructuraHtml);
@@ -55,19 +67,83 @@ const Paginascreate = () => {
 
   const handleTextAreaChange = (e) => {
     setContenidoHtml(e.target.value);
+
+    setFormData({ ...formData, HTMLContent: e.target.value });
   };
+
+  
 
   const handleDrop = (e) => {
     e.preventDefault();
+  
     if (etiquetaArrastrada) {
-      setContenidoHtml(contenidoHtml + etiquetaArrastrada);
+      const etiquetaHtml = `${etiquetaArrastrada}`;
+      const updatedContenidoHtml = contenidoHtml + etiquetaHtml;
+      setContenidoHtml(updatedContenidoHtml);
       setEtiquetaArrastrada(null);
+  
+      // Actualizar el estado del formulario con el contenido actualizado
+      setFormData({ ...formData, HTMLContent: updatedContenidoHtml });
     }
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
   };
+
+
+  const userId = Cookies.get("userId");
+
+//--------------------Consumiendo API para guardar la pagina---------------------------
+
+  const [formData, setFormData] = useState({
+    title: "",
+    url: "",
+    HTMLContent: "",
+    user_id: userId,
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  
+    // Realiza la solicitud POST a tu API
+    fetch("http://127.0.0.1:8000/api/store", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => {
+        if (response.status === 201) {
+          return response.json();
+        } else {
+          throw new Error("Revisa que todos los campos esten llenos o que esten correctos");
+        }
+      })
+      .then((data) => {
+        Swal.fire({
+          icon: "success",
+          title: "Éxito",
+          text: data.message, 
+        });
+  
+
+        setTimeout(() => {
+          window.location.href = "/dashboard/paginas"; 
+        }, 2000); 
+  
+      })
+      .catch((error) => {
+
+        Swal.fire({
+          icon: "error",
+          title: "Error al crear la página",
+          text: error.message,
+        });
+      });
+  };
+
 
   return (
     <div className="container-fluid mt-4">
@@ -128,6 +204,9 @@ const Paginascreate = () => {
                         className="form-control"
                         name="title"
                         required
+
+                        value={formData.title}
+                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                       />
                     </div>
                   </div>
@@ -142,6 +221,9 @@ const Paginascreate = () => {
                         className="form-control"
                         name="url"
                         required
+                        value={formData.url}
+                        onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+
                       />
                     </div>
                   </div>
@@ -184,6 +266,12 @@ const Paginascreate = () => {
                       ></iframe>
                     </div>
                   </div>
+                  <input
+                    type="submit"
+                    className="btn-primary btn w-100"
+                    value={"Crear pagina"}
+                    onClick={handleSubmit}
+                    />
                 </div>
               </form>
             </div>

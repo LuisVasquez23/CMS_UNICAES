@@ -1,12 +1,34 @@
 import Cookies from "js-cookie";
 import "font-awesome/css/font-awesome.min.css";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 const Home = () => {
   const userName = Cookies.get("userName");
-  const pageCount = Cookies.get("pageCount");
+  const userId = Cookies.get("userId");
 
-  const pageCountNumber = parseInt(pageCount);
+  const [pageCount, setPageCount] = useState(0); 
+
+
+  useEffect(() => {
+    async function fetchPages() {
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/page-count/${userId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setPageCount(data.pageCount); // Establece el estado pageCount
+        } else {
+          console.error("Error al obtener la cantidad de páginas del usuario");
+        }
+      } catch (error) {
+        console.error("Error al realizar la solicitud:", error);
+      }
+    }
+    fetchPages();
+  }, [userId]);
+
+
+
 
   return (
     <>
@@ -23,20 +45,19 @@ const Home = () => {
                 <i className="fw-bold fa fa-file"></i> Paginas creadas
               </div>
               <div className="card-body text-center">
-                {pageCountNumber > 0 ? (
-                  <h5 className="card-title display-5">{pageCount}</h5>
-                ) : (
-                  <p className="fw-semibold mt-3 mb-3">
-                    No tienes páginas creadas.
-                  </p>
-                )}
+
+              {pageCount > 0 ? (
+                <h5 className="card-title display-5">{pageCount}</h5>
+              ) : (
+                <p className="fw-semibold mt-3 mb-3">No tienes páginas creadas.</p>
+              )}
 
                 <Link
-                  to="/dashboard/paginas/create"
+                  to="/dashboard/paginas"
                   className="btn btn-success mt-2"
                 >
-                  <i className="fa fa-plus me-1"></i>
-                  Crear una nueva pagina
+                  <i className="fa fa-eye me-1"></i>
+                  Ver tus páginas
                 </Link>
               </div>
             </div>

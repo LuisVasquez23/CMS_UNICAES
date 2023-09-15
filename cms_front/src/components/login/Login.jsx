@@ -38,7 +38,6 @@ const Login = () => {
         Cookies.set("token", responseData.token, { expires: 7 }); // Ejemplo: guarda un token con una duración de 7 días
         Cookies.set("userId", responseData.userId, { expires: 7 }); // Guarda el userId
         Cookies.set("userName", responseData.userName, { expires: 7 }); // Guarda el userName
-        Cookies.set("pageCount", responseData.pageCount, { expires: 7 }); // Agrega el conteo de páginas a las cookies
 
         
 
