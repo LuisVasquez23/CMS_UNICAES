@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import Swal from 'sweetalert2';
 import { useParams } from 'react-router-dom';
 
+
 const PaginasEdit = () => {
 
     const { id } = useParams();
@@ -30,6 +31,11 @@ const PaginasEdit = () => {
         HTMLContent: '',
         user_id: userId,
       });
+
+
+      const handleRedirect = () => {
+        window.location.href = "/dashboard/paginas";
+      };
   
     //--------------------------------- Api para etiquetas------------------------------
   
@@ -296,12 +302,23 @@ const PaginasEdit = () => {
                         ></iframe>
                       </div>
                     </div>
-                    <input
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+
+                      <input
                       type="submit"
-                      className="btn-primary btn w-100"
+                      className="btn btn-primary"
                       value={"Actualizar pagina"}
                       onClick={handleSubmit}
                       />
+
+
+                    <button className="btn btn-secondary" type="button" onClick={handleRedirect}>
+                      Regresar
+                    </button>
+
+
+                    </div>
                   </div>
                 </form>
               </div>

@@ -18,6 +18,9 @@ Route::get('pages/{user_id}', [PageController::class, 'getPagesByUserId']);
 Route::get('/page-count/{user_id}', [PageController::class, 'getPageCount']);
 Route::get('/pages/show/{id}', [PageController::class, 'show']);
 
+Route::get('pages/{id}/html', [PageController::class, 'getPageHTML'])->name('pages.html');
+
+
 Route::post('store', [PageController::class, 'store']);
 
 

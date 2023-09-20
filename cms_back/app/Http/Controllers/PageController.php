@@ -151,5 +151,20 @@ class PageController extends Controller
 
 
 
+    public function getPageHTML($id)
+    {
+        // Encuentra la página por su ID
+        $page = Page::findOrFail($id);
+
+
+        // Devuelve el contenido HTML de la página
+        return response($page->HTMLContent, 200)
+            ->header('Content-Type', 'text/html');
+
+
+    }
+
+
+
 
 }
