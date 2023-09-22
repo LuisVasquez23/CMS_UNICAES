@@ -1,0 +1,6 @@
+.itemCard{
+    padding: 10px;
+    list-style: none;
+    box-shadow: 0px 0px 5px 5px rgba(132, 132, 132, 0.309);
+    border-radius: 10px;
+}
