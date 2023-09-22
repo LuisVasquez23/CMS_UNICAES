@@ -9,6 +9,38 @@ import "./card.css";
 const Pagina = ({ page, handleDeletePage }) => {
   const navigate = useNavigate();
 
+  const openPageInNewTab = (pageId) => {
+    const url = `http://127.0.0.1:8000/api/pages/${pageId}/html`;
+
+    const newWindow = window.open("", "_blank");
+
+    if (newWindow) {
+      newWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Vista previa</title>
+          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+        </head>
+        <body>
+          <div id="root"></div>
+          <script>
+            fetch('${url}')
+              .then(response => response.text())
+              .then(htmlContent => {
+                const root = document.getElementById('root');
+                root.innerHTML = htmlContent;
+              });
+          </script>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+        </body>
+        </html>
+      `);
+    }
+  };
+
   return (
     <Col md={4}>
       <ul className="mt-5">
@@ -22,6 +54,22 @@ const Pagina = ({ page, handleDeletePage }) => {
               onClick={() => navigate(`/dashboard/paginas/edit/${page.id}`)}
             >
               Editar
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => openPageInNewTab(page.id)}
+            >
+              Ver
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={() => handleDeletePage(page.id)}
+            >
+              Eliminar
             </button>
 
             <button
