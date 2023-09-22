@@ -71,14 +71,6 @@ const Pagina = ({ page, handleDeletePage }) => {
             >
               Eliminar
             </button>
-
-            <button
-              type="button"
-              className="btn btn-danger"
-              onClick={() => handleDeletePage(page.id)}
-            >
-              Eliminar
-            </button>
           </div>
         </li>
       </ul>
