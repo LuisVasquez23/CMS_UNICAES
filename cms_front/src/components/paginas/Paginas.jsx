@@ -48,17 +48,13 @@ const Pagina = ({ page, handleDeletePage }) => {
       <ul className="mt-5">
         <li key={page.id}>
           <h3 className="fw-semibold fs-3">Titulo: {page.title}</h3>
-          <p className="fw-normal fs-6 text-info-emphasis">url: {page.url}</p>
+          <p onClick={() => openPageInNewTab(page.id)} style={{ cursor: 'pointer' }}s>url: <a className="link-opacity-100-hover">{page.url}</a></p>
           <div className="btn-group" role="group">
             <button type="button" className="btn btn-primary"
             onClick={() => navigate(`/dashboard/paginas/edit/${page.id}`)}
             >Editar
             </button>
-
-            <button type="button" className="btn btn-secondary" onClick={() => openPageInNewTab(page.id)}>
-            Ver
-          </button>
-            
+       
             <button 
             type="button" 
             className="btn btn-danger"
